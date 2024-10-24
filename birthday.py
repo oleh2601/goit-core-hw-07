@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
+from phone import Field
 
-class Birthday():   
+class Birthday(Field):   
 
     def __init__(self, date_str: str):
         try:

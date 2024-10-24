@@ -5,8 +5,8 @@ from record import Record
 
 class AddressBook(UserDict):
 
-    def clear_all_records(self):
-        self.data = {}
+    def delete(self):
+        self.data = {}    
 
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -44,11 +44,11 @@ class AddressBook(UserDict):
             if birthday_this_year < today:
                 birthday_this_year = user["birthday"].replace(year=today.year + 1)
                 
-
             if 0 <= (birthday_this_year - today).days <= days:
                 birthday_this_year = AddressBook.adjust_for_weekend(birthday_this_year)
                 congratulation_date_str = Birthday.date_to_string(birthday_this_year)
                 upcoming_birthdays.append({"name": user["name"], "congratulation_date": congratulation_date_str})
+                
         return upcoming_birthdays
     
     def find_next_weekday(start_date: date, weekday):
