@@ -1,17 +1,24 @@
 from phone import Phone
 from phone import Name
-
+from birthday import Birthday
 
 class Record:
     
-    def __init__(self, name: Name, phones=None):
+    def __init__(self, name: Name, phones: list[Phone] = None):
         self.name = Name(name)
         self.phones = phones if phones else []
+        self.birthday = None
+
+    def add_birthday(self, birth_date: str):
+        self.birthday = Birthday(birth_date)
 
     def add_phone(self, phone_number: str):
         phone = Phone(phone_number)
         self.phones.append(phone)
         
+    def __str__(self):
+        phones_str = ', '.join(str(phone) for phone in self.phones)
+        return f"{self.name} {phones_str}"
     
     def remove_phone(self, phone_number: str):
         phone = Phone(phone_number)
@@ -41,3 +48,5 @@ class Record:
 
 
     
+
+

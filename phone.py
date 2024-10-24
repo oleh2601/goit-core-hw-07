@@ -16,7 +16,7 @@ class Phone(Field):
     def __init__(self, value: str):
         self.value = value
         if not self.validate_phone():
-            raise ValueError("Invalid phone number")
+            raise ValueError(f"Invalid phone number: {value}. Must be exactly 10 digits.")
         
 
     def validate_phone(self) -> bool:
