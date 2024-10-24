@@ -5,6 +5,7 @@ from record import Record
 from phone import Phone
 from birthday import Birthday
 
+# Decorator to handle input errors and return appropriate error messages
 def input_error(func):
     @wraps(func)
     def inner(*args, **kwargs):
@@ -20,30 +21,34 @@ def input_error(func):
             return "Please provide valid data."
     return inner
 
+# Adds a new contact or updates an existing one
 @input_error
 def add_contact(args, book: AddressBook) -> str:
     if len(args) < 2:
         return "Please provide both a name and a phone number."
     if len(args) > 2:
         return "Too many arguments. Only provide a name and a phone number."
+    
     name, phone = args
     record = book.find(name)
     message = "Contact updated."
+    
     if not record:
         record = Record(name)
         book.add_record(record)
         message = "Contact added."
-    if phone:
-        record.add_phone(phone)
+    
+    record.add_phone(phone)
     return message
 
+# Shows all contacts in the address book
 @input_error
 def get_all_contacts(book: AddressBook) -> str:
     if book.data:
-        return str(book)    
-    else:
-        return "No contacts found."
+        return str(book)
+    return "No contacts found."
 
+# Retrieves phone numbers for a given contact name
 @input_error
 def get_phone(args, book: AddressBook) -> str:
     name = args[0]
@@ -52,14 +57,17 @@ def get_phone(args, book: AddressBook) -> str:
         return ', '.join(str(phone) for phone in record.phones)
     return "Contact not found."
 
+# Changes a phone number for a contact
 @input_error
 def change_contact(args, book: AddressBook) -> str:
     if len(args) < 3:
         return "Please provide the correct number of arguments: name, old phone, and new phone."
     if len(args) > 3:
-        return "Too many arguments. Only provide a name, an old number and a new number."
+        return "Too many arguments. Only provide a name, an old number, and a new number."
+    
     name, old_phone, new_phone = args
     record = book.find(name)
+    
     if record:
         try:
             record.edit_phone(old_phone, new_phone)
@@ -68,33 +76,41 @@ def change_contact(args, book: AddressBook) -> str:
             return str(e)
     return "Contact not found."
 
+# Adds a birthday to an existing contact
 @input_error
 def add_birthday(args, book: AddressBook) -> str:
     if len(args) < 2:
         return "Please provide both a name and a birthday date in a format 'DD.MM.YYYY'."
     if len(args) > 2:
         return "Too many arguments. Only provide a name and a birthday date in a format 'DD.MM.YYYY'."
+    
     name, birthday_str = args
     record = book.find(name)
     if not record:
         return "Contact not found."
+    
     record.add_birthday(birthday_str)
     return "Birthday added."
 
+# Shows the birthday of a contact
 @input_error
 def show_birthday(args, book: AddressBook) -> str:
     if len(args) < 1:
-        return "Please provide a name of an existing contact"
+        return "Please provide a name of an existing contact."
     if len(args) > 1:
         return "Too many arguments. Please only provide a name of an existing contact."
+    
     name = args[0]
     record = book.find(name)
+    
     if not record:
         return "Contact not found."
+    
     if record and record.birthday:
         return f"{name}'s birthday is on {record.birthday.date_to_string(record.birthday.date)}"
     return "Birthday not found."
 
+# Retrieves upcoming birthdays for the next 7 days
 @input_error
 def birthdays(book: AddressBook) -> str:
     upcoming_birthdays = book.get_upcoming_birthdays()
@@ -102,12 +118,14 @@ def birthdays(book: AddressBook) -> str:
         return '\n'.join([f"{user['name']} - {user['congratulation_date']}" for user in upcoming_birthdays])
     return "No birthdays in the next 7 days."
 
+# Parses user input to separate command and arguments
 @input_error
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, args
 
+# Main loop to run the bot and handle user commands
 def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
@@ -122,9 +140,9 @@ def main():
             case "hello":
                 print("How can I help you?")
             case "add":
-                print(add_contact(args, book))     
+                print(add_contact(args, book))
             case "change":
-                print(change_contact(args, book))  
+                print(change_contact(args, book))
             case "phone":
                 print(get_phone(args, book))
             case "all":
