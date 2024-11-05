@@ -22,7 +22,7 @@ class Record:
     def __str__(self):
         """Returns a string representation of the contact with name and phones."""
         phones_str = ', '.join(str(phone) for phone in self.phones)
-        return f"{self.name} {phones_str}"
+        return f"{self.name} {phones_str} {self.birthday}"
     
     def remove_phone(self, phone_number: str):
         """Removes a specific phone number from the contact."""
@@ -35,12 +35,9 @@ class Record:
     
     def edit_phone(self, old_number, new_number):
         """Edits an existing phone number for the contact."""
-        old_phone = Phone(old_number)
         new_phone = Phone(new_number)
-        if not new_phone.validate_phone():
-            raise ValueError(f"The number {new_number} isn't valid")
         for index, phone in enumerate(self.phones):
-            if phone.value == old_phone.value:
+            if phone.value == old_number:
                 self.phones[index] = new_phone
                 return
         raise ValueError(f"The number {old_number} wasn't found in contacts")

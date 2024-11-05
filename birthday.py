@@ -4,10 +4,10 @@ from phone import Field
 class Birthday(Field):
     """Class to represent a birthday with validation and formatting capabilities."""
 
-    def __init__(self, date_str: str):
+    def __init__(self, value: str):
+        super().__init__(value)
         try:
-            self.date = Birthday.string_to_date(date_str)
-            Birthday.validate_bday(self.date)
+            Birthday.validate_bday(Birthday.string_to_date(value))
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
         

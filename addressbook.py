@@ -48,7 +48,7 @@ class AddressBook(UserDict):
 
         for record in self.data.values():
             if record.birthday:
-                birthday_this_year = record.birthday.date.replace(year=today.year)
+                birthday_this_year = Birthday.string_to_date(record.birthday.value).replace(year=today.year)
                 if birthday_this_year < today:
                     birthday_this_year = birthday_this_year.replace(year=today.year + 1)
                 
